@@ -1,59 +1,96 @@
-const CleanWebpackPlugin = require("clean-webpack-plugin");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
-const HtmlWebpackIncludeAssetsPlugin = require("html-webpack-include-assets-plugin");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const path = require("path");
+const path = require('path')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin')
 
-module.exports = {
-  entry: "./src/index.ts",
-  module: {
-    rules: [
-      {
-        test: /\.ts$/,
-        use: "ts-loader",
-        exclude: /node_modules/
+module.exports = (env) => {
+  const isDev = !env.production
+  const mode = isDev ? 'development' : 'production'
+
+  return {
+    mode,
+    entry: {
+      index: path.resolve(__dirname, 'src', 'index.ts'),
+    },
+    output: {
+      path: path.resolve(__dirname, 'dist'),
+      filename: 'bundle.js',
+    },
+
+    module: {
+      rules: [
+        {
+          test: /\.ts$/,
+          use: 'ts-loader',
+          exclude: /node_modules/,
+        },
+        {
+          test: /\.(png|svg|jpg|gif)$/,
+          use: ['file-loader'],
+        },
+        {
+          test: /\.scss/,
+          use: [
+            'style-loader',
+            {
+              loader: 'css-loader',
+              options: {
+                url: false,
+                sourceMap: isDev,
+                importLoaders: 2,
+              }
+            },
+            {
+              loader: 'sass-loader',
+              options: {
+                sourceMap: isDev,
+              },
+            },
+          ],
+        },
+      ],
+    },
+    resolve: {
+      extensions: ['.js', '.ts', '.scss'],
+      alias: {
+        '~': path.resolve(__dirname, 'src'),
       },
-      {
-        test: /\.(png|svg|jpg|gif)$/,
-        use: ["file-loader"]
+    },
+    devtool: 'inline-source-map',
+    devServer: {
+      static: {
+        directory: path.resolve(__dirname, 'dist'),
       },
-      {
-        test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, "css-loader"]
-      }
-    ]
-  },
-  resolve: {
-    extensions: [".ts", ".js"]
-  },
-  devtool: "inline-source-map",
-  devServer: {
-    contentBase: "./dist",
-    hot: true
-  },
-  plugins: [
-    new CopyWebpackPlugin([
-      {
-        from: "node_modules/ccapture.js/build/CCapture.all.min.js",
-        to: "assets/js"
-      }
-    ]),
-    new CleanWebpackPlugin(),
-    new HtmlWebpackPlugin({
-      title: "P5.js Typescript boilerplate"
-    }),
-    new HtmlWebpackIncludeAssetsPlugin({
-      assets: ["assets/js/CCapture.all.min.js"],
-      append: false
-    }),
-    new MiniCssExtractPlugin({
-      filename: "[name].css",
-      chunkFilename: "[id].css"
-    })
-  ],
-  output: {
-    filename: "bundle.js",
-    path: path.resolve(__dirname, "dist")
+      compress: true,
+      hot: true,
+      port: 8080,
+    },
+    plugins: [
+      new CopyWebpackPlugin({
+        patterns: [
+          {
+            from: 'node_modules/ccapture.js/build/CCapture.all.min.js',
+            to: 'assets/js',
+          },
+        ],
+      }),
+      new HtmlWebpackPlugin({
+        title: 'P5.js Typescript boilerplate',
+      }),
+      new HtmlWebpackTagsPlugin({
+        append: false,
+        scripts: 'assets/js/CCapture.all.min.js',
+        links: [
+          {
+            path: 'https://p5js.org/assets/img/favicon.ico',
+            attributes: { rel: 'shortcut icon' },
+          },
+          {
+            path: 'https://p5js.org/assets/img/favicon.ico',
+            attributes: { rel: 'icon' },
+          },
+        ],
+      }),
+    ],
   }
-};
+}

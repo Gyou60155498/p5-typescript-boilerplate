@@ -1,11 +1,19 @@
 {
   "compilerOptions": {
-    "allowJs": true,
-    "module": "es6",
-    "noImplicitAny": true,
-    "outDir": "./dist/",
-    "sourceMap": true,
     "strict": true,
-    "target": "es5"
-  }
+    "noImplicitAny": true,
+    "target": "ES2020",
+    "module": "ESNext",
+    "lib": [
+      "ESNext",
+      "DOM",
+    ],
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "paths": {
+      "~/*": ["./src/*"],
+    },
+    "typeRoots": ["./src/typings"],
+    "outDir": "./dist/",
+  },
 }

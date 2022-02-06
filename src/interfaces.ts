@@ -1,6 +1,5 @@
-export interface ShapeInterface {}
+export interface Shape {}
 
-export interface ShapesInterface {
-  isAnimationComplete: boolean;
-  render(): void;
+export interface Orb extends Shape {
+  radius: number
 }

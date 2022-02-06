@@ -1,9 +1,9 @@
 import p5 from 'p5'
-import { OrbInterface } from '~/interfaces'
+import { Orb } from '~/interfaces'
 import Shapes from '~/shapes/AbstractShapes'
 
 export default class RotatingOrb extends Shapes {
-  public shapes: OrbInterface[] = []
+  protected shapes: Orb[] = []
   private orbAngle = 0
 
   constructor(p5: p5) {
@@ -19,19 +19,19 @@ export default class RotatingOrb extends Shapes {
 
   protected renderShape = ({
     radius,
-  }: OrbInterface) => {
+  }: Orb) => {
     this.p5.rotateY(this.orbAngle)
     this.orbAngle += 0.01
     this.p5.sphere(radius)
   }
 
-  protected setAnimationCompleteStatus(shapes: OrbInterface[]) {
+  protected setAnimationCompleteStatus(shapes: Orb[]) {
     if (this.p5.frameCount === 60) {
       this.isAnimationComplete = true
     }
   }
 
-  protected updateShape(shapes: OrbInterface[]) {}
+  protected updateShape(shapes: Orb[]) {}
 
   public renderShapes() {
     for (let i = 0; i < this.shapes.length; i++) {

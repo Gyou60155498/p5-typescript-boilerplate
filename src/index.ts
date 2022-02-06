@@ -1,7 +1,8 @@
 import p5 from 'p5'
 import RotatingOrb from '~/shapes/RotatingOrb'
-import { ShapesInterface } from '~/interfaces'
-import { CANVAS_ID, FRAME_RATE, COLOR_BACKGROUND } from '~/constants'
+import {
+  CANVAS_ID, FRAME_RATE, COLOR_BACKGROUND,
+} from '~/constants'
 import '~/style/global'
 
 const captureConfig: CCaptureOptions = {
@@ -14,7 +15,7 @@ const captureConfig: CCaptureOptions = {
 const sketch = (p5: p5) => {
   const capturer = new CCapture(captureConfig)
   let canvas: HTMLElement | null
-  let orb: ShapesInterface
+  let orb: RotatingOrb
   let exportAnimation = false
 
   p5.preload = () => {}

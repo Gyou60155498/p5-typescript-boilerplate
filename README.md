@@ -6,7 +6,7 @@ P5.js boilerplate with Typescript support and Webpack enabled.
 
 Clone the repository
 
-`git clone --depth=1 git@github.com:nathan-kansu/p5-typescript-boilerplate.git <YOUR_PROJECT_NAME>`
+`git clone --depth=1 git@github.com:Gyou60155498/p5-typescript-boilerplate.git <YOUR_PROJECT_NAME>`
 
 ## Setup
 
@@ -18,4 +18,4 @@ Install project dependencies
 
 Run the local webpack-dev-server on http://localhost:8080/
 
-`npm start`
+`npm dev`

@@ -1,56 +1,52 @@
-import * as p5 from "p5";
-import Shapes from "./Shapes";
-import { ShapesInterface } from "./interfaces";
+import p5 from 'p5'
+import RotatingOrb from '~/shapes/RotatingOrb'
+import { ShapesInterface } from '~/interfaces'
+import { CANVAS_ID, FRAME_RATE, COLOR_BACKGROUND } from '~/constants'
+import '~/style/global'
 
-import {
-  CANVAS_HEIGHT,
-  CANVAS_ID,
-  CANVAS_WIDTH,
-  COLOR_BACKGROUND,
-  FRAME_RATE
-} from "./constants";
-
-import "./style.css";
+const captureConfig: CCaptureOptions = {
+  format: 'webm',
+  quality: 100,
+  framerate: FRAME_RATE,
+  verbose: true,
+}
 
 const sketch = (p5: p5) => {
-  const capturer = new CCapture({
-    format: "jpg",
-    framerate: FRAME_RATE,
-    quality: 100
-  });
-  let canvas: HTMLElement | null;
-  let exportAnimation: Boolean = false;
-  let shapes: ShapesInterface;
+  const capturer = new CCapture(captureConfig)
+  let canvas: HTMLElement | null
+  let orb: ShapesInterface
+  let exportAnimation = false
+
+  p5.preload = () => {}
 
   p5.setup = () => {
-    p5.createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
-    p5.frameRate(FRAME_RATE);
-    canvas = document.getElementById(CANVAS_ID);
-    shapes = new Shapes(p5);
+    p5.createCanvas(p5.windowWidth, p5.windowHeight, p5.WEBGL)
+    canvas = document.getElementById(CANVAS_ID)
+    orb = new RotatingOrb(p5)
+  }
 
-    shapes.render();
-
-    if (exportAnimation) {
-      capturer.start();
-    }
-  };
+  p5.windowResized = () => {
+    p5.resizeCanvas(p5.windowWidth, p5.windowHeight)
+  }
 
   p5.draw = () => {
-    p5.background(COLOR_BACKGROUND);
-    shapes.render();
+    p5.background(COLOR_BACKGROUND)
+    orb.renderShapes()
 
-    if (exportAnimation) {
-      if (canvas) {
-        capturer.capture(canvas);
+    if (exportAnimation && canvas) {
+      if (p5.frameCount === 1) {
+        capturer.start()
       }
 
-      if (shapes.isAnimationComplete) {
-        p5.noLoop();
-        capturer.stop();
-        capturer.save();
+      capturer.capture(canvas)
+
+      if (orb.isAnimationComplete) {
+        p5.noLoop()
+        capturer.stop()
+        capturer.save()
       }
     }
-  };
-};
+  }
+}
 
-new p5(sketch);
+new p5(sketch)

@@ -63,7 +63,6 @@ module.exports = (env) => {
       },
       compress: true,
       hot: true,
-      port: 8080,
     },
     plugins: [
       new CopyWebpackPlugin({
